@@ -8,10 +8,19 @@
  * Controller of the fcSportslinkAilesburyApp
  */
 angular.module('fcSportslinkAilesburyApp')
-  .controller('MainCtrl', function ($scope) {
+  .controller('MainCtrl', function ($scope , localStorageService) {
     $scope.awesomeThings = ['HTML5 Boilerplate','AngularJS','Karma'];
 
-    $scope.todos = [];
+
+        /* START: Read ToDos from LocalStorage */
+        var todosInStore = localStorageService.get('todos');
+
+        $scope.todos = todosInStore && todosInStore.split('\n') || [];
+
+        $scope.$watch('todos', function () {
+          localStorageService.add('todos', $scope.todos.join('\n'));
+        }, true);
+        /* END: Read ToDos from LocalStorage */
 
     /* function run when addTodo() pressed */
     $scope.addTodo = function () {
